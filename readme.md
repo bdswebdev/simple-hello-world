@@ -1,41 +1,71 @@
 
-App:
+# Instructions
+
+Steps to set up the project. I used Linux(Ubuntu), but most of them should be the same in other os and disto environments as well.
+
+
+#### Requirements
+- docker
+- terraform
+- gcloud
+- kubectl (with a version that includes kustomize)
+
+## App
+
+I used Docker Hub to push the build image, you can find it at:
+https://hub.docker.com/r/bdswebdev/node-test-app
+
+```
 docker build . -t node-test-app:latest 
-docker tag node-test-app:latest bdswebdev/node-test-app:latest
 
+# push to your own repo after login :
+docker tag node-test-app:latest <user>/<image>:<tag>
+docker push <user>/<image>:<tag> 
+```
 
-create project in gce
+## Infrastructure
 
-enable Compute Engine API (terraform will remind you if you forget)
+- Create a project in Google Compute Engine
 
-gcloud services enable compute.googleapis.com
-OR
-https://console.cloud.google.com/apis/library/compute.googleapis.com?project=<project id>
+- Enable Compute Engine API (terraform will remind you if you forget)
 
+    gcloud services enable compute.googleapis.com
+    OR
+    https://console.cloud.google.com/apis/library/compute.googleapis.com?project=<project-id>
 
-gcloud services enable container.googleapis.com
+- Enable Kubernetes Engine API
 
-terraform init
+    gcloud services enable container.googleapis.com
+    OR
+    https://console.cloud.google.com/apis/library/container.googleapis.com?project=<project-id>
 
-update terraform.tfvars in terraform
-you can override the region with
-region     = "europe-west6"
+- ```
+    cd terraform
+    terraform init
+    ```
+    Update terraform.tfvars in terraform (i.e. change region).
+    ```
+    terraform apply
+    ```
+## Kubernetes
 
-terraform apply -var="first_run=true"   - hacky solution to fit into quota
-following runs should be 
-terraform apply
+- If you don't have the gke-gcloud-auth-plugin, you need to install it.
+    https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
 
+- Update kubeconfig file from the terraform output:
+    ```
+    gcloud container clusters get-credentials $(terraform output -raw cluster_name) --region $(terraform output -raw region)
+    ```
 
+- Deploy the application and set up the sevice and ingress:
+    ```
+    cd ../k8s
+    kubectl apply -k base
+    ```
 
-david@DESKTOP-1:~/projects/saas.group/learn-terraform-provision-gke-cluster-main$ gcloud container clusters get-credentials $(terraform output -raw kubernetes_cluster_name) --region $(terraform output -raw region)
-Fetching cluster endpoint and auth data.
-CRITICAL: ACTION REQUIRED: gke-gcloud-auth-plugin, which is needed for continued use of kubectl, was not found or is not executable. Install gke-gcloud-auth-plugin for use with kubectl by following https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
-kubeconfig entry generated for steam-crowbar-385609-gke.
-david@DESKTOP-1:~/projects/saas.group/learn-terraform-provision-gke-cluster-main$
-
-
-sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-
-
-
-gcloud container clusters get-credentials $(terraform output -raw kubernetes_cluster_name) --region $(terraform output -raw region)
+- Get the public ip and access the application:
+    ```
+    kubectl get service
+    ```
+    grab the EXTERNAL-IP of "node-service"  
+    you should find the result at http://<EXTERNAL-IP>:8080
