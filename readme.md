@@ -26,6 +26,8 @@ docker push <user>/<image>:<tag>
 ## Infrastructure
 
 - Create a project in Google Compute Engine
+- Set project id
+    gcloud config set project <project-id>
 
 - Enable Compute Engine API (terraform will remind you if you forget)
 
