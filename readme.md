@@ -27,19 +27,21 @@ docker push <user>/<image>:<tag>
 
 - Create a project in Google Compute Engine
 - Set project id
-    gcloud config set project <project-id>
+    gcloud config set project [project-id]
 
 - Enable Compute Engine API (terraform will remind you if you forget)
-
+    ```
     gcloud services enable compute.googleapis.com
+    ```
     OR
-    https://console.cloud.google.com/apis/library/compute.googleapis.com?project=<project-id>
+    https://console.cloud.google.com/apis/library/compute.googleapis.com?project=[project-id]
 
 - Enable Kubernetes Engine API
-
+    ```
     gcloud services enable container.googleapis.com
+    ```
     OR
-    https://console.cloud.google.com/apis/library/container.googleapis.com?project=<project-id>
+    https://console.cloud.google.com/apis/library/container.googleapis.com?project=[project-id]
 
 - ```
     cd terraform
