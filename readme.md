@@ -45,6 +45,11 @@ docker push <user>/<image>:<tag>
     OR
     https://console.cloud.google.com/apis/library/container.googleapis.com?project=[project-id]
 
+- To use your gcloud credentials you need to set your credentials. i.e.
+  ```
+  gcloud auth application-default login
+  ```
+
 - ```
     cd terraform
     terraform init
