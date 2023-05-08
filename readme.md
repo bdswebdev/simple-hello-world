@@ -30,6 +30,7 @@ docker push <user>/<image>:<tag>
     ```
     gcloud config set project [project-id]
     ```
+    Duplicate the "terraform.tfvars.template" file in the terraform folder. Call the new file "terraform.tfvars". Set your project id and region in it.
 
 - Enable Compute Engine API (terraform will remind you if you forget)
     ```
@@ -46,16 +47,19 @@ docker push <user>/<image>:<tag>
     https://console.cloud.google.com/apis/library/container.googleapis.com?project=[project-id]
 
 - To use your gcloud credentials you need to set your credentials. i.e.
-  ```
-  gcloud auth application-default login
-  ```
+    ```
+    gcloud auth application-default login
+    ```
+    https://console.cloud.google.com/apis/library/container.googleapis.com?project=[project-id]
 
-- ```
+- To use your gcloud credentials you need to set your credentials. i.e.
+    ```
+    gcloud auth application-default login
+    ```
+- Run terraform to set up the infrastructure
+    ```
     cd terraform
     terraform init
-    ```
-    Update terraform.tfvars in terraform (i.e. change region).
-    ```
     terraform apply
     ```
 ## Kubernetes
@@ -78,5 +82,12 @@ docker push <user>/<image>:<tag>
     ```
     kubectl get service
     ```
-    grab the EXTERNAL-IP of "node-service"  
-    you should find the result at http://<EXTERNAL-IP>:8080
+    Grab the EXTERNAL-IP of "node-service"  
+    You should find the result at http://[EXTERNAL-IP]:8080
+
+
+## Cleaning up
+```
+cd ../terraform
+terraform dastroy
+```
