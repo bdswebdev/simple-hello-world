@@ -85,5 +85,5 @@ docker push <user>/<image>:<tag>
 ## Cleaning up
 ```
 cd ../terraform
-terraform dastroy
+terraform destroy
 ```
